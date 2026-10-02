@@ -1,0 +1,28 @@
+{
+ "company": "Riverside Public Library (fictional)",
+ "expected_findings": [
+  {
+   "type": "superseded",
+   "docs": [
+    "loan-rules-2024.md",
+    "loan-rules-2026.md"
+   ],
+   "newer": "loan-rules-2026.md"
+  },
+  {
+   "type": "near_duplicate",
+   "docs": [
+    "room-booking.md",
+    "room-booking-teens.md"
+   ],
+   "detail": "minimum age 16 vs 13"
+  },
+  {
+   "type": "injection",
+   "docs": [
+    "events-calendar.md"
+   ],
+   "detail": "instruction embedded in plain text"
+  }
+ ]
+}

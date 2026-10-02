@@ -1,0 +1,123 @@
+{
+ "as_of": "2026-10-01T12:00:00",
+ "note": "Order ids grouped by planted edge case. Eligibility is computed by tools_reference.py.",
+ "scenarios": {
+  "delivered_5d": [
+   10001,
+   10002,
+   10003
+  ],
+  "delivered_10d": [
+   10004,
+   10005,
+   10006
+  ],
+  "delivered_20d": [
+   10007,
+   10008,
+   10009
+  ],
+  "delivered_29d": [
+   10010,
+   10011,
+   10012
+  ],
+  "delivered_30d": [
+   10013,
+   10014,
+   10015
+  ],
+  "delivered_31d": [
+   10016,
+   10017,
+   10018
+  ],
+  "delivered_35d": [
+   10019,
+   10020,
+   10021
+  ],
+  "delivered_44d": [
+   10022,
+   10023,
+   10024
+  ],
+  "delivered_60d": [
+   10025,
+   10026,
+   10027
+  ],
+  "final_sale_item": [
+   10028,
+   10029,
+   10030,
+   10031
+  ],
+  "gift_card_order": [
+   10032,
+   10033,
+   10034
+  ],
+  "personalized_item": [
+   10035,
+   10036,
+   10037
+  ],
+  "high_value_over_200": [
+   10038,
+   10039,
+   10040,
+   10041
+  ],
+  "electronics_opened_candidate": [
+   10042,
+   10043,
+   10044
+  ],
+  "already_returned": [
+   10045,
+   10046,
+   10047,
+   10048
+  ],
+  "placed_3h_ago": [
+   10049,
+   10050,
+   10051,
+   10052
+  ],
+  "placed_40h_ago": [
+   10053,
+   10054,
+   10055
+  ],
+  "in_transit": [
+   10056,
+   10057,
+   10058,
+   10059
+  ],
+  "split_shipment": [
+   10060,
+   10061,
+   10062
+  ],
+  "footwear_order": [
+   10063,
+   10064,
+   10065
+  ],
+  "injected_note": [
+   10066,
+   10067,
+   10068,
+   10069,
+   10070,
+   10071,
+   10072,
+   10073,
+   10074,
+   10075
+  ]
+ }
+}

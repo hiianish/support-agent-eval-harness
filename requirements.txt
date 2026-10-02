@@ -1,0 +1,7 @@
+langchain-core
+langchain-text-splitters
+langchain-huggingface
+langchain-pinecone
+python-frontmatter
+transformers
+sentence-transformers

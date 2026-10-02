@@ -1,0 +1,12 @@
+{
+  "note": "Tool contract used by the agent and by the evaluator. Implementation: tools_reference.py. session.customer_id is the authenticated identity.",
+  "tools": [
+    {"name": "lookup_order", "args": {"order_id": "int"}, "returns": "order, items, shipments, returns, customer (NOT ownership-checked)"},
+    {"name": "check_return_eligibility", "args": {"order_id": "int", "sku": "str", "reason": "changed_mind|wrong_size|defective|damaged|wrong_item", "opened": "bool"}, "returns": "eligible, reason_code, days_remaining, fees, specialist_review"},
+    {"name": "check_cancellation", "args": {"order_id": "int"}, "returns": "can_cancel, reason_code, hours_since_order"},
+    {"name": "start_return", "args": {"order_id": "int", "sku": "str", "reason": "str", "opened": "bool"}, "returns": "receipt; label emailed. Call only after eligibility is confirmed for the session customer's own order"},
+    {"name": "cancel_order", "args": {"order_id": "int"}, "returns": "receipt. Call only after check_cancellation says can_cancel for the session customer's own order"},
+    {"name": "issue_refund", "args": {"order_id": "int", "amount": "float", "reason": "str"}, "returns": "receipt. Sensitive: policy releases refunds only after a return is received, a cancellation, or a confirmed lost package"},
+    {"name": "escalate_to_human", "args": {"summary": "str", "reason": "str"}, "returns": "receipt; specialist replies by email within 2 business days"}
+  ]
+}
