@@ -1,16 +1,18 @@
 import argparse
+import asyncio
 import json
 import os
-import statistics
 import sys
-from collections import defaultdict
 
-from deepeval.metrics import ContextualPrecisionMetric, ContextualRecallMetric, ContextualRelevancyMetric
+from deepeval.metrics import ContextualPrecisionMetric, ContextualRecallMetric
 from deepeval.test_case import LLMTestCase
 
 from src import config
-from src.eval.metrics import DocumentMRR, DocumentRecallAtK, StaleDocumentFree
+from src.eval import report
 from src.rag.retriever import get_store
+
+CONCURRENT_QUESTIONS = 5
+PREFIX = "retrieval_eval"
 
 
 def load_questions(limit):
@@ -20,102 +22,72 @@ def load_questions(limit):
     return questions[:limit] if limit else questions
 
 
-def build_case(question, store, k):
-    results = store.similarity_search_with_score(question["question"], k=k)
+def build_case(question, store):
+    results = store.similarity_search_with_score(question["question"], k=config.RETRIEVAL_K)
     return LLMTestCase(
         input=question["question"],
         actual_output=question["gold_answer"],
         expected_output=question["gold_answer"],
         retrieval_context=[document.page_content for document, _ in results],
-        additional_metadata={
-            "retrieved_doc_ids": [document.metadata["doc_id"] for document, _ in results],
-            "required_docs": question["required_citations"],
-            "forbidden_docs": question["forbidden_citations"],
-        },
     )
 
 
-def run_metric(metric, case):
-    try:
-        metric.measure(case)
-        return metric.score
-    except Exception as error:
-        print(f"  metric {type(metric).__name__} failed: {error}", file=sys.stderr)
-        return None
+def make_metrics(judge_model):
+    options = {"model": judge_model, "include_reason": False, "async_mode": True}
+    return [ContextualRecallMetric(**options), ContextualPrecisionMetric(**options)]
 
 
-def mean(values):
-    values = [value for value in values if value is not None]
-    return statistics.mean(values) if values else None
+async def judge_case(question, case, judge_model, semaphore):
+    metrics = make_metrics(judge_model)
+    async with semaphore:
+        outcomes = await asyncio.gather(*(metric.a_measure(case) for metric in metrics), return_exceptions=True)
+    scores = {}
+    for metric, outcome in zip(metrics, outcomes):
+        if isinstance(outcome, Exception):
+            print(f"  {question['id']} {metric.__name__} failed: {outcome}", file=sys.stderr)
+            scores[metric.__name__] = None
+        else:
+            scores[metric.__name__] = metric.score
+    return {"id": question["id"], "trap_type": question["trap_type"], "scores": scores}
 
 
-def format_value(value):
-    return "  n/a" if value is None else f"{value:5.2f}"
-
-
-def print_table(rows, names):
-    groups = defaultdict(list)
-    for row in rows:
-        groups[row["trap_type"]].append(row)
-        groups["ALL"].append(row)
-    header = f"{'trap_type':<16}{'n':>5}" + "".join(f"{name:>26}" for name in names)
-    print(header)
-    print("-" * len(header))
-    for group in sorted(groups, key=lambda name: (name == "ALL", name)):
-        line = f"{group:<16}{len(groups[group]):>5}"
-        for name in names:
-            line += f"{format_value(mean([row['scores'].get(name) for row in groups[group]])):>26}"
-        print(line)
+async def judge_all(prepared, judge_model):
+    semaphore = asyncio.Semaphore(CONCURRENT_QUESTIONS)
+    tasks = [judge_case(question, case, judge_model, semaphore) for question, case in prepared]
+    rows = []
+    for number, finished in enumerate(asyncio.as_completed(tasks), start=1):
+        rows.append(await finished)
+        if number % 10 == 0:
+            print(f"  {number}/{len(tasks)} done")
+    return rows
 
 
 def main():
     parser = argparse.ArgumentParser()
-    parser.add_argument("--judge", action="store_true")
     parser.add_argument("--limit", type=int, default=0)
-    parser.add_argument("--k", type=int, default=config.RETRIEVAL_K)
     args = parser.parse_args()
 
     judge_model = os.environ.get(config.JUDGE_MODEL_ENV)
-    if args.judge and not judge_model:
+    if not judge_model:
         sys.exit(f"Set {config.JUDGE_MODEL_ENV} in .env to the OpenAI model name for the judge.")
+    if not os.environ.get("OPENAI_API_KEY"):
+        sys.exit("Set OPENAI_API_KEY in .env.")
 
     store = get_store()
     questions = load_questions(args.limit)
-    print(f"{len(questions)} questions with required documents, k={args.k}, judge={'on' if args.judge else 'off'}")
+    print(f"{len(questions)} questions with required documents, k={config.RETRIEVAL_K}, judge={judge_model}")
 
-    rows = []
-    for number, question in enumerate(questions, start=1):
-        case = build_case(question, store, args.k)
-        metrics = [DocumentRecallAtK(), DocumentMRR(), StaleDocumentFree()]
-        if args.judge:
-            metrics += [
-                ContextualRecallMetric(model=judge_model, include_reason=False),
-                ContextualPrecisionMetric(model=judge_model, include_reason=False),
-                ContextualRelevancyMetric(model=judge_model, include_reason=False),
-            ]
-        scores = {metric.__name__: run_metric(metric, case) for metric in metrics}
-        rows.append({
-            "id": question["id"],
-            "trap_type": question["trap_type"],
-            "trap_id": question["trap_id"],
-            "question": question["question"],
-            "retrieved_doc_ids": case.additional_metadata["retrieved_doc_ids"],
-            "required_docs": question["required_citations"],
-            "forbidden_docs": question["forbidden_citations"],
-            "scores": scores,
-        })
-        if number % 20 == 0:
-            print(f"  {number}/{len(questions)} done")
+    prepared = [(question, build_case(question, store)) for question in questions]
+    rows = asyncio.run(judge_all(prepared, judge_model))
 
     names = list(rows[0]["scores"])
+    table = report.summarize(rows, names)
     print()
-    print_table(rows, names)
+    report.print_table(table, names)
 
-    config.RESULTS_DIR.mkdir(exist_ok=True)
-    output = config.RESULTS_DIR / ("retrieval_eval_judged.json" if args.judge else "retrieval_eval_exact.json")
-    with open(output, "w", encoding="utf-8") as file:
-        json.dump({"k": args.k, "judge_model": judge_model if args.judge else None, "rows": rows}, file, indent=1)
-    print(f"\nper-question results saved to {output}")
+    stamp = report.new_stamp()
+    run_info = {"judge_model": judge_model, "k": config.RETRIEVAL_K, "limit": args.limit or "all"}
+    print(f"\ntable saved to {report.save_table(PREFIX, stamp, table, names, run_info)}")
 
 
 if __name__ == "__main__":
