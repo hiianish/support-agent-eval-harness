@@ -9,7 +9,7 @@ from deepeval.test_case import LLMTestCase
 
 from src import config
 from src.eval import report
-from src.rag.retriever import get_store
+from src.rag.retriever import search
 
 CONCURRENT_QUESTIONS = 5
 PREFIX = "retrieval_eval"
@@ -22,8 +22,8 @@ def load_questions(limit):
     return questions[:limit] if limit else questions
 
 
-def build_case(question, store):
-    results = store.similarity_search_with_score(question["question"], k=config.RETRIEVAL_K)
+def build_case(question):
+    results = search(question["question"])
     return LLMTestCase(
         input=question["question"],
         actual_output=question["gold_answer"],
@@ -73,11 +73,10 @@ def main():
     if not os.environ.get("OPENAI_API_KEY"):
         sys.exit("Set OPENAI_API_KEY in .env.")
 
-    store = get_store()
     questions = load_questions(args.limit)
     print(f"{len(questions)} questions with required documents, k={config.RETRIEVAL_K}, judge={judge_model}")
 
-    prepared = [(question, build_case(question, store)) for question in questions]
+    prepared = [(question, build_case(question)) for question in questions]
     rows = asyncio.run(judge_all(prepared, judge_model))
 
     names = list(rows[0]["scores"])

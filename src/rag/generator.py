@@ -32,6 +32,8 @@ class Generation:
     contexts: list = field(default_factory=list)
     doc_ids: list = field(default_factory=list)
     cited_doc_ids: list = field(default_factory=list)
+    blocked_by: str = ""
+    guard_reason: str = ""
 
 
 def get_model():
