@@ -80,7 +80,7 @@ def save_table(prefix, stamp, table, names, run_info):
 def save_reasons(prefix, stamp, rows, perfect):
     config.RESULTS_DIR.mkdir(exist_ok=True)
     output = config.RESULTS_DIR / f"{prefix}_{stamp}_reasons.csv"
-    columns = ["id", "trap_type", "metric", "score", "question", "answer", "retrieved_docs", "reason"]
+    columns = ["id", "trap_type", "metric", "score", "question", "answer", "retrieved_docs", "trace", "reason"]
     count = 0
     with open(output, "w", newline="", encoding="utf-8") as file:
         writer = csv.DictWriter(file, fieldnames=columns)
@@ -97,6 +97,7 @@ def save_reasons(prefix, stamp, rows, perfect):
                     "question": row["question"],
                     "answer": row.get("answer", ""),
                     "retrieved_docs": " ".join(row.get("retrieved_doc_ids", [])),
+                    "trace": row.get("trace", ""),
                     "reason": row["reasons"].get(name, ""),
                 })
                 count += 1

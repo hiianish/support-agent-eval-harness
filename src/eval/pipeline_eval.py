@@ -192,7 +192,7 @@ def main():
     model = get_model()
     generator_model = os.environ[config.GENERATOR_MODEL_ENV]
     questions = load_questions(args.limit)
-    print(f"{len(questions)} questions, live retrieval k={config.RETRIEVAL_K}, guardrails={"on" if config.GUARDRAILS_ENABLED else "off"}, generator={generator_model}, judge={judge_model}")
+    print(f"{len(questions)} questions, live retrieval k={config.RETRIEVAL_K}, guardrails={'on' if config.GUARDRAILS_ENABLED else 'off'}, generator={generator_model}, judge={judge_model}")
 
     rows = asyncio.run(evaluate_all(questions, model, judge_model))
 

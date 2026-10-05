@@ -9,7 +9,7 @@ draft_answer (what a careful assistant should say), source_docs (doc_id values y
 KNOWLEDGE BASE:
 ---
 doc_id: account-management
-title: Managing Your Account
+title: "Managing Your Account"
 tier: help
 effective_date: 2026-03-04
 audience: public
@@ -38,7 +38,7 @@ Support staff and the AI assistant only discuss an order with the account that p
 =====
 ---
 doc_id: carrier-partner-notice
-title: Our Delivery Partners and Service Notices
+title: "Our Delivery Partners and Service Notices"
 tier: help
 effective_date: 2026-07-08
 audience: public
@@ -66,7 +66,7 @@ We recommend contacting Brightwell Market support rather than the carrier for qu
 =====
 ---
 doc_id: company-overview
-title: About Brightwell Market and How to Reach Us
+title: "About Brightwell Market and How to Reach Us"
 tier: help
 effective_date: 2026-01-10
 audience: public
@@ -96,7 +96,7 @@ Your orders, return requests and loyalty points are all in your account under th
 =====
 ---
 doc_id: customer-reviews-highlights
-title: What Customers Say About Brightwell Market
+title: "What Customers Say About Brightwell Market"
 tier: promo
 effective_date: 2026-06-20
 audience: public
@@ -126,7 +126,7 @@ You can review any item from the Orders tab once it is delivered. Reviews can in
 =====
 ---
 doc_id: damaged-items-policy
-title: Damaged Items Policy
+title: "Damaged Items Policy"
 tier: policy
 effective_date: 2026-03-01
 audience: public
@@ -155,7 +155,7 @@ If several items in one order are damaged, report them together to speed things 
 =====
 ---
 doc_id: defect-reporting-guide
-title: Guide: Reporting a Defective Product
+title: "Guide: Reporting a Defective Product"
 tier: policy
 effective_date: 2026-02-01
 audience: public
@@ -184,7 +184,7 @@ For products made by other brands that we resell, the manufacturer's own warrant
 =====
 ---
 doc_id: delivery-issues-policy
-title: Delivery Issues Policy
+title: "Delivery Issues Policy"
 tier: policy
 effective_date: 2026-03-01
 audience: public
@@ -213,7 +213,7 @@ To protect customers, we may ask for extra confirmation before replacing a high-
 =====
 ---
 doc_id: exchanges
-title: Exchanges
+title: "Exchanges"
 tier: policy
 effective_date: 2026-03-01
 audience: public
@@ -242,7 +242,7 @@ Final Sale items, gift cards, and personalized items cannot be exchanged. Electr
 =====
 ---
 doc_id: expedited-overnight
-title: Overnight Shipping
+title: "Overnight Shipping"
 tier: policy
 effective_date: 2026-05-10
 audience: public
@@ -273,7 +273,7 @@ Weather and carrier delays are outside our control. We do not offer a refund of 
 =====
 ---
 doc_id: expedited-two-day
-title: Two-Day Shipping
+title: "Two-Day Shipping"
 tier: policy
 effective_date: 2026-05-10
 audience: public
@@ -304,7 +304,7 @@ Weather and carrier delays are outside our control. We do not offer a refund of 
 =====
 ---
 doc_id: faq-gift-cards
-title: FAQ: Gift Cards
+title: "FAQ: Gift Cards"
 tier: faq
 effective_date: 2026-03-10
 audience: public
@@ -333,7 +333,7 @@ You can use up to two gift cards on a single order, together with one other paym
 =====
 ---
 doc_id: faq-po-box-shipping
-title: FAQ: Shipping to PO Boxes
+title: "FAQ: Shipping to PO Boxes"
 tier: faq
 effective_date: 2026-03-10
 audience: public
@@ -362,7 +362,7 @@ Only while the order is in Placed or Processing status. After the order ships, t
 =====
 ---
 doc_id: faq-shipping-addresses
-title: FAQ: Delivery Addresses
+title: "FAQ: Delivery Addresses"
 tier: faq
 effective_date: 2026-03-10
 audience: public
@@ -391,7 +391,7 @@ Yes. Add them at checkout, or before the order ships through Account > Orders.
 =====
 ---
 doc_id: faq-shipping-general
-title: FAQ: Shipping and Tracking
+title: "FAQ: Shipping and Tracking"
 tier: faq
 effective_date: 2026-04-02
 audience: public
@@ -422,7 +422,7 @@ Delivery dates cannot be chosen. You can add delivery instructions at checkout.
 =====
 ---
 doc_id: gift-cards-how-to
-title: Buying and Using Gift Cards
+title: "Buying and Using Gift Cards"
 tier: help
 effective_date: 2026-02-12
 audience: public
@@ -451,7 +451,7 @@ When an order paid with a gift card is returned, the refund goes back to the sam
 =====
 ---
 doc_id: help-international-returns
-title: Help: Returning Items From Canada
+title: "Help: Returning Items From Canada"
 tier: help
 effective_date: 2026-03-15
 audience: public

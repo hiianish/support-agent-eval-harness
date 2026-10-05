@@ -9,7 +9,7 @@ draft_answer (what a careful assistant should say), source_docs (doc_id values y
 KNOWLEDGE BASE:
 ---
 doc_id: sales-tax
-title: Sales Tax and Duties
+title: "Sales Tax and Duties"
 tier: policy
 effective_date: 2026-01-25
 audience: public
@@ -35,7 +35,7 @@ A tax receipt is attached to every order confirmation email, and a copy is store
 =====
 ---
 doc_id: shipping-canada-standard
-title: Standard Shipping to Canada
+title: "Standard Shipping to Canada"
 tier: policy
 effective_date: 2026-05-01
 audience: public
@@ -66,7 +66,7 @@ The carrier makes up to 2 delivery attempts. If delivery fails, the package is h
 =====
 ---
 doc_id: shipping-rates-v1
-title: Shipping Rates and Free Shipping
+title: "Shipping Rates and Free Shipping"
 tier: policy
 effective_date: 2025-01-01
 version: 1
@@ -102,7 +102,7 @@ Shipping charges are shown on the last step of checkout. The charge shown when y
 =====
 ---
 doc_id: shipping-rates-v2
-title: Shipping Rates and Free Shipping
+title: "Shipping Rates and Free Shipping"
 tier: policy
 effective_date: 2026-05-01
 version: 2
@@ -139,7 +139,7 @@ Shipping charges are shown on the last step of checkout. The charge shown when y
 =====
 ---
 doc_id: shipping-us-standard
-title: Standard Shipping to the United States
+title: "Standard Shipping to the United States"
 tier: policy
 effective_date: 2026-05-01
 audience: public
@@ -170,7 +170,7 @@ The carrier makes up to 3 delivery attempts. If delivery fails, the package is h
 =====
 ---
 doc_id: size-fit-guide
-title: Apparel Size and Fit Guide
+title: "Apparel Size and Fit Guide"
 tier: help
 effective_date: 2026-02-25
 audience: public
@@ -196,7 +196,7 @@ Footwear is listed in US sizes. Half sizes are available on most styles. If a sh
 =====
 ---
 doc_id: split-shipments
-title: Orders That Arrive in More Than One Package
+title: "Orders That Arrive in More Than One Package"
 tier: help
 effective_date: 2026-03-25
 audience: public
@@ -224,7 +224,7 @@ If one package is delayed, follow the lost packages guidance for that package on
 =====
 ---
 doc_id: terms-of-sale
-title: Terms of Sale
+title: "Terms of Sale"
 tier: terms
 effective_date: 2026-01-15
 audience: public
@@ -260,7 +260,7 @@ Questions about these terms can be sent to support@brightwellmarket.example.
 =====
 ---
 doc_id: warranty-claims-process
-title: Warranty Claims Process
+title: "Warranty Claims Process"
 tier: policy
 effective_date: 2026-02-01
 audience: public
@@ -289,7 +289,7 @@ If your claim is declined and you disagree, reply to the decision email and a se
 =====
 ---
 doc_id: warranty-electronics-v1
-title: Electronics Warranty
+title: "Electronics Warranty"
 tier: policy
 effective_date: 2025-01-01
 version: 1
@@ -325,7 +325,7 @@ This warranty is in addition to any rights you have under consumer law where you
 =====
 ---
 doc_id: warranty-electronics-v2
-title: Electronics Warranty
+title: "Electronics Warranty"
 tier: policy
 effective_date: 2026-02-01
 version: 2
@@ -362,7 +362,7 @@ This warranty is in addition to any rights you have under consumer law where you
 =====
 ---
 doc_id: warranty-kitchen
-title: Warranty: Home and Kitchen
+title: "Warranty: Home and Kitchen"
 tier: policy
 effective_date: 2026-02-10
 audience: public
@@ -393,7 +393,7 @@ This warranty is in addition to any rights you have under consumer law where you
 =====
 ---
 doc_id: warranty-outdoor-gear
-title: Warranty: Outdoor Gear
+title: "Warranty: Outdoor Gear"
 tier: policy
 effective_date: 2026-02-10
 audience: public
@@ -424,7 +424,7 @@ This warranty is in addition to any rights you have under consumer law where you
 =====
 ---
 doc_id: wrong-item-received
-title: Received the Wrong Item
+title: "Received the Wrong Item"
 tier: help
 effective_date: 2026-02-24
 audience: public

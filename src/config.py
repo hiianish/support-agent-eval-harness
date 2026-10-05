@@ -8,6 +8,9 @@ load_dotenv(ROOT / ".env")
 
 POLICIES_DIR = ROOT / "data" / "policies"
 QUESTIONS_PATH = ROOT / "data" / "eval" / "questions.jsonl"
+ATTACK_PATH = ROOT / "data" / "attacks" / "customs.jsonl"
+DB_PATH = ROOT / "data" / "db" / "orders.db"
+AGENT_MAX_STEPS = 6
 RESULTS_DIR = ROOT / "results"
 
 EMBED_MODEL = os.environ.get("EMBED_MODEL", "text-embedding-3-small")

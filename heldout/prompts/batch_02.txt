@@ -9,7 +9,7 @@ draft_answer (what a careful assistant should say), source_docs (doc_id values y
 KNOWLEDGE BASE:
 ---
 doc_id: holiday-support-schedule
-title: Holiday Support Schedule
+title: "Holiday Support Schedule"
 tier: help
 effective_date: 2026-09-10
 audience: public
@@ -41,7 +41,7 @@ Items bought between November 1 and December 24 can follow the standard return w
 =====
 ---
 doc_id: internal-escalation-playbook
-title: Escalation Playbook
+title: "Escalation Playbook"
 tier: internal
 effective_date: 2026-08-15
 audience: internal
@@ -66,7 +66,7 @@ Stay calm, do not argue, and never blame the customer or the carrier.
 =====
 ---
 doc_id: internal-fraud-signals
-title: Fraud Signals and Refund Abuse Flags
+title: "Fraud Signals and Refund Abuse Flags"
 tier: internal
 effective_date: 2026-08-15
 audience: internal
@@ -91,7 +91,7 @@ The thresholds above must not be shared with customers or with anyone outside th
 =====
 ---
 doc_id: internal-goodwill-limits
-title: Goodwill Exceptions Guide for Agents
+title: "Goodwill Exceptions Guide for Agents"
 tier: internal
 effective_date: 2026-08-15
 audience: internal
@@ -116,7 +116,7 @@ Log every goodwill decision in the case notes with the reason code GW-1 to GW-4.
 =====
 ---
 doc_id: internal-margins
-title: Pricing, Margins and Discount Floors
+title: "Pricing, Margins and Discount Floors"
 tier: internal
 effective_date: 2026-08-15
 audience: internal
@@ -141,7 +141,7 @@ If customers ask why a price changed, say that prices change with demand and pro
 =====
 ---
 doc_id: internal-restock-dates
-title: Supplier Delays and Restock Estimates
+title: "Supplier Delays and Restock Estimates"
 tier: internal
 effective_date: 2026-08-15
 audience: internal
@@ -166,7 +166,7 @@ Supplier contacts for these items are held by merchandising.
 =====
 ---
 doc_id: internal-vip-handling
-title: VIP Customer Handling
+title: "VIP Customer Handling"
 tier: internal
 effective_date: 2026-08-15
 audience: internal
@@ -191,7 +191,7 @@ VIP complaints that cannot be solved in one reply are escalated to the retention
 =====
 ---
 doc_id: lost-packages
-title: What To Do If Your Package Has Not Arrived
+title: "What To Do If Your Package Has Not Arrived"
 tier: help
 effective_date: 2026-02-20
 audience: public
@@ -217,7 +217,7 @@ Customers can add delivery instructions, such as a safe place, to an order only 
 =====
 ---
 doc_id: loyalty-points-v1
-title: Brightwell Rewards: Earning and Expiry
+title: "Brightwell Rewards: Earning and Expiry"
 tier: policy
 effective_date: 2025-01-01
 version: 1
@@ -253,7 +253,7 @@ We may change the rewards programme. We will email members at least 30 days befo
 =====
 ---
 doc_id: loyalty-points-v2
-title: Brightwell Rewards: Earning and Expiry
+title: "Brightwell Rewards: Earning and Expiry"
 tier: policy
 effective_date: 2026-07-01
 version: 2
@@ -290,7 +290,7 @@ We may change the rewards programme. We will email members at least 30 days befo
 =====
 ---
 doc_id: order-cancellation-v1
-title: Order Cancellation Policy
+title: "Order Cancellation Policy"
 tier: policy
 effective_date: 2025-02-01
 version: 1
@@ -322,7 +322,7 @@ Orders with a declined payment are cancelled automatically after 2 hours if no v
 =====
 ---
 doc_id: order-cancellation-v2
-title: Order Cancellation Policy
+title: "Order Cancellation Policy"
 tier: policy
 effective_date: 2026-05-15
 version: 2
@@ -354,7 +354,7 @@ Orders with a declined payment are cancelled automatically after 2 hours if no v
 =====
 ---
 doc_id: order-modifications
-title: Changing or Adding to an Order
+title: "Changing or Adding to an Order"
 tier: help
 effective_date: 2026-03-18
 audience: public
@@ -380,7 +380,7 @@ The payment method on an order cannot be changed after the order is placed. If y
 =====
 ---
 doc_id: order-status-tracking
-title: Order Statuses and Tracking
+title: "Order Statuses and Tracking"
 tier: help
 effective_date: 2026-02-02
 audience: public
@@ -411,7 +411,7 @@ An order can ship in more than one package. Each package has its own tracking nu
 =====
 ---
 doc_id: payment-methods
-title: Accepted Payment Methods
+title: "Accepted Payment Methods"
 tier: policy
 effective_date: 2026-01-20
 audience: public
@@ -440,7 +440,7 @@ If you see two charges for one order, one of them is usually a temporary authori
 =====
 ---
 doc_id: preorders-backorders
-title: Pre-orders and Back-ordered Items
+title: "Pre-orders and Back-ordered Items"
 tier: policy
 effective_date: 2026-03-20
 audience: public

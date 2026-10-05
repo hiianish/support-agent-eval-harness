@@ -9,7 +9,7 @@ draft_answer (what a careful assistant should say), source_docs (doc_id values y
 KNOWLEDGE BASE:
 ---
 doc_id: price-adjustment-v1
-title: Price Adjustment Policy
+title: "Price Adjustment Policy"
 tier: policy
 effective_date: 2025-01-01
 version: 1
@@ -42,7 +42,7 @@ If you return an item, any price adjustment already paid on it is deducted from 
 =====
 ---
 doc_id: price-adjustment-v2
-title: Price Adjustment Policy
+title: "Price Adjustment Policy"
 tier: policy
 effective_date: 2026-06-01
 version: 2
@@ -76,7 +76,7 @@ If you return an item, any price adjustment already paid on it is deducted from 
 =====
 ---
 doc_id: privacy-summary
-title: Privacy Summary
+title: "Privacy Summary"
 tier: policy
 effective_date: 2026-01-30
 audience: public
@@ -104,7 +104,7 @@ Chats with the AI assistant are stored so that a human specialist can continue y
 =====
 ---
 doc_id: product-care-apparel
-title: Caring for Your Apparel
+title: "Caring for Your Apparel"
 tier: help
 effective_date: 2026-02-18
 audience: public
@@ -132,7 +132,7 @@ The care label sewn into each garment is the final authority on how to look afte
 =====
 ---
 doc_id: product-care-electronics
-title: Caring for Your Electronics Accessories
+title: "Caring for Your Electronics Accessories"
 tier: help
 effective_date: 2026-05-22
 audience: public
@@ -160,7 +160,7 @@ Use a slightly damp microfibre cloth. Do not spray liquids directly on ports or 
 =====
 ---
 doc_id: promo-codes
-title: Promo Codes and Sales
+title: "Promo Codes and Sales"
 tier: policy
 effective_date: 2026-03-12
 audience: public
@@ -189,7 +189,7 @@ When you return an item bought with a promo code, the refund is the price you ac
 =====
 ---
 doc_id: promo-holiday-shipping
-title: Holiday Offer: Free Shipping
+title: "Holiday Offer: Free Shipping"
 tier: promo
 effective_date: 2026-09-15
 audience: public
@@ -215,7 +215,7 @@ Gift cards do not count towards the free shipping amount. The offer cannot be co
 =====
 ---
 doc_id: referral-program
-title: Refer a Friend
+title: "Refer a Friend"
 tier: promo
 effective_date: 2026-08-03
 audience: public
@@ -243,7 +243,7 @@ If a friend's order did not earn you credit, contact support with the friend's o
 =====
 ---
 doc_id: refunds-policy-v1
-title: Refunds Policy
+title: "Refunds Policy"
 tier: policy
 effective_date: 2025-04-01
 version: 1
@@ -278,7 +278,7 @@ Under Account > Orders, an order shows Return requested until we receive the pac
 =====
 ---
 doc_id: refunds-policy-v2
-title: Refunds Policy
+title: "Refunds Policy"
 tier: policy
 effective_date: 2026-04-15
 version: 2
@@ -316,7 +316,7 @@ Under Account > Orders, an order shows Return requested until we receive the pac
 =====
 ---
 doc_id: restocking-fee-v1
-title: Restocking Fee Policy
+title: "Restocking Fee Policy"
 tier: policy
 effective_date: 2025-03-01
 version: 1
@@ -348,7 +348,7 @@ If you believe a restocking fee was applied by mistake, contact support with you
 =====
 ---
 doc_id: restocking-fee-v2
-title: Restocking Fee Policy
+title: "Restocking Fee Policy"
 tier: policy
 effective_date: 2026-03-01
 version: 2
@@ -380,7 +380,7 @@ If you believe a restocking fee was applied by mistake, contact support with you
 =====
 ---
 doc_id: returns-apparel
-title: Returns: Apparel
+title: "Returns: Apparel"
 tier: policy
 effective_date: 2026-03-05
 audience: public
@@ -414,7 +414,7 @@ Items marked Final Sale at the time of purchase cannot be returned.
 =====
 ---
 doc_id: returns-footwear
-title: Returns: Footwear
+title: "Returns: Footwear"
 tier: policy
 effective_date: 2026-03-05
 audience: public
@@ -448,7 +448,7 @@ Items marked Final Sale at the time of purchase cannot be returned.
 =====
 ---
 doc_id: returns-policy-v1
-title: Returns Policy
+title: "Returns Policy"
 tier: policy
 effective_date: 2025-01-01
 version: 1
@@ -490,7 +490,7 @@ You can return some items from an order and keep others. The return window for e
 =====
 ---
 doc_id: returns-policy-v2
-title: Returns Policy
+title: "Returns Policy"
 tier: policy
 effective_date: 2026-03-01
 version: 2
