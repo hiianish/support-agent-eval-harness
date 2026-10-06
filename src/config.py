@@ -8,7 +8,8 @@ load_dotenv(ROOT / ".env")
 
 POLICIES_DIR = ROOT / "data" / "policies"
 QUESTIONS_PATH = ROOT / "data" / "eval" / "questions.jsonl"
-ATTACK_PATH = ROOT / "data" / "attacks" / "customs.jsonl"
+ATTACK_PATH = ROOT / "data" / "attacks" / "custom.jsonl"
+ATTACK_PATH1 = ROOT / "data" / "attacks" / "hackaprompt_subset.jsonl"
 DB_PATH = ROOT / "data" / "db" / "orders.db"
 AGENT_MAX_STEPS = 6
 RESULTS_DIR = ROOT / "results"

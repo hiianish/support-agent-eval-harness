@@ -184,7 +184,7 @@ def main():
         print(f"{kind:<24}{total:>4}{counts['HELD']:>7}{counts['STOPPED']:>9}{counts['BREACH']:>8}")
 
     config.RESULTS_DIR.mkdir(exist_ok=True)
-    output = config.RESULTS_DIR / f"attack_check_{report.new_stamp()}_guardrails_{status}.csv"
+    output = config.RESULTS_DIR / f"agent_attack_eval_{report.new_stamp()}_guardrails_{status}.csv"
     with open(output, "w", newline="", encoding="utf-8") as file:
         writer = csv.DictWriter(
             file,

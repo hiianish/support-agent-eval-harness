@@ -5,6 +5,7 @@ from functools import lru_cache
 from langchain_pinecone import PineconeVectorStore
 
 from src import config
+from src.observability import observe
 from src.rag.embeddings import get_embeddings
 
 POOL_SIZE = 25
@@ -39,6 +40,7 @@ def get_retriever(k=config.RETRIEVAL_K, filter=None):
     return get_store().as_retriever(search_kwargs={"k": k, "filter": build_filter(filter)})
 
 
+@observe(as_type="retriever", name="vector_search")
 def search(query, k=config.RETRIEVAL_K, filter=None):
     candidates = get_store().similarity_search_with_score(query, k=POOL_SIZE, filter=build_filter(filter))
     kept, per_doc = [], {}

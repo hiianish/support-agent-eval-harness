@@ -7,10 +7,11 @@ import sys
 from dataclasses import dataclass
 from functools import lru_cache
 
-os.environ.setdefault("OTEL_SDK_DISABLED", "true")
+if os.environ.get("TRACING", "off").strip().lower() != "on":
+    os.environ.setdefault("OTEL_SDK_DISABLED", "true")
 logging.getLogger("opentelemetry").setLevel(logging.CRITICAL)
 
-from openai import OpenAI
+from src.observability import OpenAI, observe
 
 from guardrails import Guard
 
@@ -174,9 +175,11 @@ def check_output(answer, question, documents):
     return run_guard(output_guard(), answer, metadata)
 
 
+@observe(as_type="guardrail", name="input_guard")
 async def acheck_input(question):
     return await asyncio.to_thread(check_input, question)
 
 
+@observe(as_type="guardrail", name="output_guard", capture_input=False)
 async def acheck_output(answer, question, documents):
     return await asyncio.to_thread(check_output, answer, question, documents)

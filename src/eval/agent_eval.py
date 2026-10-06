@@ -27,7 +27,6 @@ ALL_NAMES = AGENT + APPLICATION + SAFETY
 def load_questions(limit):
     with open(config.QUESTIONS_PATH, encoding="utf-8") as file:
         questions = [json.loads(line) for line in file if line.strip()]
-    questions = [question for question in questions if question["needs_tools"]]
     return questions[:limit] if limit else questions
 
 

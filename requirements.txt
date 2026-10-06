@@ -5,3 +5,4 @@ langchain-pinecone
 python-frontmatter
 transformers
 sentence-transformers
+langfuse
