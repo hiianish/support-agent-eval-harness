@@ -14,6 +14,17 @@ from src.observability import AsyncOpenAI, record, tool_span, trace_context
 from src.rag import guards
 from src.rag.pipeline import message_for
 
+TOOL_LABELS = {
+    "search_policies": "Searching our policies",
+    "lookup_order": "Looking up your order",
+    "check_return_eligibility": "Checking return eligibility",
+    "check_cancellation": "Checking cancellation options",
+    "start_return": "Starting your return",
+    "cancel_order": "Cancelling your order",
+    "issue_refund": "Processing your refund",
+    "escalate_to_human": "Connecting you with a person",
+}
+
 FALLBACK_MESSAGE = (
     "I'm sorry, I couldn't complete that request. "
     "I can connect you with a human agent if you need more help."
@@ -80,6 +91,7 @@ class Agent:
         self.client = AsyncOpenAI()
         self.session = ToolSession(customer_id)
         self.use_temperature = True
+        self.on_status = None  # optional async callback(text); the API sets it per turn to stream progress
         prompt = AGENT_PROMPT.format(date=reference.AS_OF_DATE.isoformat(), customer_id=customer_id)
         self.messages = [{"role": "system", "content": prompt}]
 
@@ -109,6 +121,14 @@ class Agent:
             guard_reason=guard_reason,
         )
 
+    async def status(self, text):
+        if self.on_status is None:
+            return
+        try:
+            await self.on_status(text)
+        except Exception:
+            pass
+
     async def say(self, text):
         tags = ["guardrails-on" if self.enabled else "guardrails-off"]
         with trace_context(self.customer_id, self.session_id, tags=tags) as span:
@@ -119,12 +139,14 @@ class Agent:
 
     async def respond(self, text):
         if self.enabled:
+            await self.status("Checking your message")
             verdict = await guards.acheck_input(text)
             if not verdict.passed:
                 return self.result(message_for(verdict.reason), 0, "input", verdict.reason)
         self.messages.append({"role": "user", "content": text})
         answer, steps = None, 0
         for steps in range(1, config.AGENT_MAX_STEPS + 1):
+            await self.status("Writing your answer" if steps > 1 else "Thinking")
             response = await self.complete()
             message = response.choices[0].message
             self.messages.append(message.model_dump(exclude_none=True))
@@ -133,6 +155,7 @@ class Agent:
                 break
             for call in message.tool_calls:
                 arguments = parse_arguments(call.function.arguments)
+                await self.status(TOOL_LABELS.get(call.function.name, "Working on it"))
                 with tool_span(call.function.name, arguments) as span:
                     outcome = await asyncio.to_thread(self.session.execute, call.function.name, arguments)
                     record(span, output=outcome)
@@ -141,6 +164,7 @@ class Agent:
             answer = FALLBACK_MESSAGE
             self.messages.append({"role": "assistant", "content": answer})
         if self.enabled:
+            await self.status("Checking the answer")
             verdict = await guards.acheck_output(answer, text, self.session.documents)
             if not verdict.passed:
                 answer = message_for(verdict.reason)

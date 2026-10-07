@@ -1,0 +1,29 @@
+services:
+  - type: web
+    name: brightwell-support-agent
+    runtime: docker
+    plan: free
+    healthCheckPath: /health
+    envVars:
+      - key: TRACING
+        value: "on"
+      - key: GUARDRAILS
+        value: "on"
+      - key: LANGFUSE_BASE_URL
+        value: https://cloud.langfuse.com   # use https://us.cloud.langfuse.com if your project is in the US region
+      - key: OPENAI_API_KEY
+        sync: false
+      - key: PINECONE_API_KEY
+        sync: false
+      - key: PINECONE_INDEX_NAME
+        sync: false
+      - key: GENERATOR_MODEL
+        sync: false
+      - key: GUARD_MODEL
+        sync: false
+      - key: EMBED_MODEL
+        sync: false
+      - key: LANGFUSE_PUBLIC_KEY
+        sync: false
+      - key: LANGFUSE_SECRET_KEY
+        sync: false

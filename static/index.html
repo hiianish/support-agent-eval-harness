@@ -1,0 +1,525 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Brightwell Support</title>
+<style>
+  :root {
+    --mist: #eef2f0; --surface: #ffffff; --ink: #16221f; --muted: #5e6f6a; --line: #dbe3df;
+    --spruce: #1f4d45; --spruce-ink: #ffffff; --bot: #f3f6f4; --lantern: #e8a93a;
+    --ok: #3f8f6b; --warn: #c58a1d; --bad: #b4553f; --shadow: 0 1px 2px rgba(22,34,31,.06), 0 12px 32px -12px rgba(22,34,31,.18);
+  }
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --mist: #0e1513; --surface: #151e1b; --ink: #e8efec; --muted: #8fa19b; --line: #25322e;
+      --spruce: #2f7566; --spruce-ink: #ffffff; --bot: #1b2623; --lantern: #f0b64a;
+      --ok: #5cb88e; --warn: #e0a942; --bad: #e0836c; --shadow: 0 12px 32px -12px rgba(0,0,0,.6);
+    }
+  }
+  * { box-sizing: border-box; }
+  html, body { height: 100%; margin: 0; }
+  body {
+    background: var(--mist); color: var(--ink);
+    font: 15px/1.55 system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", sans-serif;
+    -webkit-font-smoothing: antialiased;
+    display: flex; align-items: center; justify-content: center; padding: 20px;
+  }
+  button, select, textarea { font: inherit; color: inherit; }
+  :focus-visible { outline: 2px solid var(--lantern); outline-offset: 2px; }
+
+  .shell {
+    width: 100%; max-width: 980px; height: min(100%, 780px);
+    display: grid; grid-template-columns: 280px 1fr;
+    background: var(--surface); border: 1px solid var(--line); border-radius: 20px;
+    box-shadow: var(--shadow); overflow: hidden;
+  }
+
+  /* sidebar */
+  aside { min-width: 0; padding: 22px 18px; border-right: 1px solid var(--line); display: flex; flex-direction: column; gap: 22px; overflow-y: auto; }
+  .brand { display: flex; align-items: center; gap: 10px; }
+  .brand svg { width: 30px; height: 30px; flex: none; }
+  .brand b { display: block; font-size: 15px; line-height: 1.2; }
+  .brand span { font-size: 12.5px; color: var(--muted); }
+  .field label { display: block; font-size: 12.5px; color: var(--muted); margin-bottom: 6px; }
+  .select-wrap { position: relative; }
+  select {
+    width: 100%; appearance: none; padding: 9px 34px 9px 12px; border: 1px solid var(--line);
+    border-radius: 10px; background: var(--surface); cursor: pointer;
+  }
+  .select-wrap::after {
+    content: ""; position: absolute; right: 13px; top: 50%; width: 7px; height: 7px; margin-top: -6px;
+    border-right: 1.5px solid var(--muted); border-bottom: 1.5px solid var(--muted); transform: rotate(45deg); pointer-events: none;
+  }
+  .orders h2 { font-size: 12.5px; font-weight: 500; color: var(--muted); margin: 0 0 8px; }
+  #orders { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 6px; }
+  .order {
+    width: 100%; text-align: left; padding: 9px 11px; border: 1px solid var(--line); border-radius: 10px;
+    background: transparent; cursor: pointer; transition: border-color .15s, background .15s;
+  }
+  .order:hover { border-color: var(--spruce); background: var(--bot); }
+  .order .top { display: flex; align-items: center; justify-content: space-between; gap: 8px; font-weight: 600; font-size: 13.5px; }
+  .order .st { display: inline-flex; align-items: center; gap: 6px; font-weight: 400; font-size: 12px; color: var(--muted); }
+  .dot { width: 7px; height: 7px; border-radius: 50%; background: var(--ok); }
+  .dot.warn { background: var(--warn); } .dot.bad { background: var(--bad); }
+  .order .items { display: block; margin-top: 2px; font-size: 12.5px; color: var(--muted); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+  .foot { margin-top: auto; font-size: 12px; color: var(--muted); line-height: 1.5; }
+  .link { background: none; border: 0; padding: 0; color: var(--spruce); text-decoration: underline; cursor: pointer; font-size: 12.5px; }
+  @media (prefers-color-scheme: dark) { .link { color: var(--lantern); } }
+
+  /* chat */
+  main { display: flex; flex-direction: column; min-width: 0; min-height: 0; }
+  #log { flex: 1; overflow-y: auto; padding: 24px 28px 8px; scrollbar-gutter: stable; display: flex; flex-direction: column; gap: 16px; }
+  #log::-webkit-scrollbar { width: 8px; } #log::-webkit-scrollbar-thumb { background: var(--line); border-radius: 8px; }
+  .row { display: flex; gap: 10px; max-width: 100%; }
+  .row.user { justify-content: flex-end; }
+  .avatar { width: 28px; height: 28px; border-radius: 50%; background: var(--spruce); flex: none; display: grid; place-items: center; margin-top: 2px; }
+  .avatar svg { width: 16px; height: 16px; }
+  .bubble { max-width: min(560px, 82%); overflow-wrap: anywhere; }
+  .bot .bubble { padding: 2px 0; }
+  .user .bubble { background: var(--spruce); color: var(--spruce-ink); padding: 9px 14px; border-radius: 16px 16px 4px 16px; }
+  .bubble p { margin: 0 0 8px; } .bubble p:last-child { margin: 0; }
+  .bubble ul { margin: 0 0 8px; padding-left: 20px; } .bubble li { margin: 2px 0; }
+  .err { align-self: center; font-size: 13px; color: var(--bad); background: var(--bot); padding: 7px 12px; border-radius: 10px; }
+  .status { color: var(--muted); font-size: 14px; margin-right: 8px; }
+  .dots { display: inline-flex; gap: 4px; padding: 8px 0; }
+  .dots i { width: 6px; height: 6px; border-radius: 50%; background: var(--muted); animation: pulse 1.1s infinite ease-in-out; }
+  .dots i:nth-child(2) { animation-delay: .15s; } .dots i:nth-child(3) { animation-delay: .3s; }
+  @keyframes pulse { 0%, 80%, 100% { opacity: .25; transform: translateY(0); } 40% { opacity: 1; transform: translateY(-3px); } }
+  @media (prefers-reduced-motion: reduce) { .dots i { animation: none; opacity: .6; } .order { transition: none; } }
+
+  /* welcome */
+  .welcome { margin: auto 0; padding: 8px 0 24px; max-width: 460px; }
+  .welcome h1 { font-size: 22px; line-height: 1.25; margin: 0 0 6px; letter-spacing: -.01em; }
+  .welcome p { margin: 0 0 18px; color: var(--muted); }
+  .asks { display: flex; flex-direction: column; gap: 8px; align-items: flex-start; }
+  .ask { padding: 8px 14px; border: 1px solid var(--line); border-radius: 999px; background: transparent; cursor: pointer; font-size: 14px; text-align: left; transition: border-color .15s, background .15s; }
+  .ask:hover { border-color: var(--spruce); background: var(--bot); }
+  .ask.edge { border-style: dashed; color: var(--muted); }
+
+  /* composer */
+  form { padding: 12px 28px 22px; }
+  .composer { display: flex; align-items: flex-end; gap: 8px; padding: 8px 8px 8px 16px; border: 1px solid var(--line); border-radius: 16px; background: var(--surface); transition: border-color .15s, box-shadow .15s; }
+  .composer:focus-within { border-color: var(--spruce); box-shadow: 0 0 0 3px color-mix(in srgb, var(--spruce) 18%, transparent); }
+  textarea { flex: 1; border: 0; background: transparent; resize: none; outline: none; padding: 6px 0; max-height: 120px; line-height: 1.5; }
+  textarea:focus-visible { outline: none; }
+  textarea::placeholder { color: var(--muted); }
+  .send { width: 38px; height: 38px; border: 0; border-radius: 11px; background: var(--spruce); color: var(--spruce-ink); cursor: pointer; display: grid; place-items: center; flex: none; }
+  .send svg { width: 18px; height: 18px; }
+  .send:disabled { opacity: .4; cursor: default; }
+  .hint { margin: 8px 4px 0; font-size: 12px; color: var(--muted); }
+
+  /* atmosphere: one slow ambient layer behind the card */
+  body { position: relative; isolation: isolate; }
+  body::before {
+    content: ""; position: fixed; inset: -20%; z-index: -1; pointer-events: none;
+    background:
+      radial-gradient(38% 38% at 18% 22%, color-mix(in srgb, var(--spruce) 20%, transparent), transparent 70%),
+      radial-gradient(34% 34% at 82% 78%, color-mix(in srgb, var(--lantern) 22%, transparent), transparent 70%);
+    animation: drift 26s ease-in-out infinite alternate;
+  }
+  @keyframes drift { to { transform: translate3d(3%, -2%, 0) scale(1.08); } }
+
+  .chat-head { display: flex; align-items: center; gap: 12px; padding: 14px 28px; border-bottom: 1px solid var(--line); }
+  .chat-head .avatar { width: 36px; height: 36px; margin: 0; }
+  .chat-head .avatar svg { width: 19px; height: 19px; }
+  .chat-head b { display: block; font-size: 14.5px; line-height: 1.25; }
+  .chat-head span { font-size: 12.5px; color: var(--muted); display: flex; align-items: center; gap: 7px; }
+  .live { width: 7px; height: 7px; border-radius: 50%; background: var(--ok); animation: breathe 2.4s ease-out infinite; }
+  @keyframes breathe { 0% { box-shadow: 0 0 0 0 color-mix(in srgb, var(--ok) 60%, transparent); } 70%, 100% { box-shadow: 0 0 0 7px transparent; } }
+
+  .user .bubble { background: linear-gradient(135deg, var(--spruce), color-mix(in srgb, var(--spruce) 72%, #5cc2aa)); box-shadow: 0 6px 14px -8px color-mix(in srgb, var(--spruce) 70%, transparent); }
+
+  .lantern { width: 58px; height: 58px; border-radius: 18px; background: var(--spruce); display: grid; place-items: center; margin-bottom: 16px; animation: glow 3.4s ease-in-out infinite; }
+  .lantern svg { width: 32px; height: 32px; overflow: visible; }
+  .lantern .flame { transform-origin: 16px 24px; animation: flicker 2.2s ease-in-out infinite; }
+  @keyframes glow { 0%, 100% { box-shadow: 0 0 18px 1px color-mix(in srgb, var(--lantern) 35%, transparent); } 50% { box-shadow: 0 0 34px 8px color-mix(in srgb, var(--lantern) 55%, transparent); } }
+  @keyframes flicker { 0%, 100% { transform: scale(1, 1); opacity: 1; } 35% { transform: scale(.92, 1.08); opacity: .85; } 65% { transform: scale(1.05, .95); opacity: 1; } }
+
+  .ask { display: inline-flex; align-items: center; gap: 9px; }
+  .ask svg { width: 16px; height: 16px; flex: none; color: var(--spruce); }
+  @media (prefers-color-scheme: dark) { .ask svg { color: var(--lantern); } }
+  .ask.edge svg { color: var(--muted); }
+
+  .bar { display: flex; gap: 3px; margin-top: 9px; }
+  .bar i { flex: 1; height: 3px; border-radius: 2px; background: var(--line); transform-origin: left; }
+  .bar i.on { background: var(--ok); animation: grow .6s ease-out both; }
+  .bar i.on:nth-child(2) { animation-delay: .12s; } .bar i.on:nth-child(3) { animation-delay: .24s; }
+  .bar.warn i.on { background: var(--warn); } .bar.bad i.on { background: var(--bad); }
+  @keyframes grow { from { transform: scaleX(0); } to { transform: scaleX(1); } }
+
+  /* motion: everything here answers something the person did, except the one-time entrance of the orders */
+  @keyframes rise { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: none; } }
+  @keyframes fade { from { opacity: 0; } to { opacity: 1; } }
+  @keyframes spin { to { transform: rotate(360deg); } }
+  @keyframes ping { 0% { box-shadow: 0 0 0 0 color-mix(in srgb, var(--lantern) 65%, transparent); } 100% { box-shadow: 0 0 0 12px transparent; } }
+  .row, .err { animation: rise .22s ease-out; }
+  .welcome { animation: fade .4s ease-out; }
+  .ask { animation: rise .35s ease-out both; }
+  .ask:nth-child(1) { animation-delay: .05s; } .ask:nth-child(2) { animation-delay: .12s; }
+  .ask:nth-child(3) { animation-delay: .19s; } .ask:nth-child(4) { animation-delay: .26s; }
+  #orders li { animation: rise .4s ease-out both; animation-delay: calc(var(--i, 0) * 70ms); }
+  .order { transition: border-color .15s, background .15s, transform .15s; }
+  .order:hover { transform: translateY(-1px); }
+  .order.ping { border-color: var(--lantern); animation: ping 1.1s ease-out 2; }
+  .send { transition: transform .12s, opacity .15s; } .send:not(:disabled):active { transform: scale(.92); }
+  .w { animation: fade .35s ease-out both; }
+
+  .trail { display: flex; flex-direction: column; gap: 4px; padding: 3px 0; font-size: 14px; color: var(--muted); min-width: 230px; }
+  .step { display: flex; align-items: center; gap: 9px; animation: rise .2s ease-out; }
+  .step .mark { width: 14px; height: 14px; flex: none; display: grid; place-items: center; }
+  .step .tick { width: 14px; height: 14px; color: var(--ok); }
+  .step .spin { width: 11px; height: 11px; border-radius: 50%; border: 2px solid var(--line); border-top-color: var(--spruce); animation: spin .8s linear infinite; }
+  @media (prefers-color-scheme: dark) { .step .spin { border-top-color: var(--lantern); } }
+  .step.now { color: var(--ink); }
+  .step .t { margin-left: auto; padding-left: 14px; font-size: 12px; color: var(--muted); font-variant-numeric: tabular-nums; }
+  .meta { display: flex; align-items: center; gap: 10px; margin-top: 6px; font-size: 12px; color: var(--muted); }
+  .meta button { background: none; border: 0; padding: 0; color: inherit; font-size: 12px; cursor: pointer; text-decoration: underline; text-underline-offset: 2px; }
+  .meta button:hover { color: var(--ink); }
+
+  @media (prefers-reduced-motion: reduce) {
+    *, *::before, *::after { animation: none !important; transition: none !important; }
+    .step .spin { border-top-color: var(--spruce); }
+  }
+
+  /* phones */
+  @media (max-width: 760px) {
+    body { padding: 0; align-items: stretch; }
+    .shell { grid-template-columns: minmax(0, 1fr); grid-template-rows: auto minmax(0, 1fr); height: 100%; max-width: none; border-radius: 0; border: 0; }
+    aside { border-right: 0; border-bottom: 1px solid var(--line); padding: 14px 16px; gap: 12px; overflow: visible; }
+    .brand span, .foot, .orders h2 { display: none; }
+    #orders { flex-direction: row; overflow-x: auto; padding-bottom: 2px; }
+    .order { min-width: 150px; width: auto; }
+    .chat-head { padding: 10px 16px; }
+    #log { padding: 16px 16px 8px; } form { padding: 10px 16px 14px; }
+    .hint { display: none; }
+  }
+</style>
+</head>
+<body>
+<div class="shell">
+  <aside>
+    <div class="brand">
+      <svg viewBox="0 0 32 32" aria-hidden="true"><rect width="32" height="32" rx="9" fill="#1f4d45"/><path d="M16 7 7 24h18L16 7Z" fill="none" stroke="#fff" stroke-width="2" stroke-linejoin="round"/><path d="M12.5 24 16 17l3.5 7" fill="#e8a93a" stroke="#e8a93a" stroke-width="1.5" stroke-linejoin="round"/></svg>
+      <div><b>Brightwell Market</b><span>Customer support</span></div>
+    </div>
+
+    <div class="field">
+      <label for="customer">Signed in as</label>
+      <div class="select-wrap"><select id="customer"></select></div>
+    </div>
+
+    <div class="orders">
+      <h2>Your orders</h2>
+      <ul id="orders"></ul>
+    </div>
+
+    <div class="foot">
+      Demo with synthetic data. Choosing a customer simulates signing in, and the assistant can only see that customer's orders.<br>
+      <button class="link" id="newchat" type="button">Start a new chat</button>
+    </div>
+  </aside>
+
+  <main>
+    <div class="chat-head">
+      <div class="avatar"><svg viewBox="0 0 32 32" fill="none" stroke="#fff" stroke-width="2.4" stroke-linejoin="round"><path d="M16 6 6 25h20L16 6Z"/></svg></div>
+      <div><b>Brightwell Assistant</b><span><i class="live"></i>Online, replies in a few seconds</span></div>
+    </div>
+    <div id="log" aria-live="polite"></div>
+    <form id="form">
+      <div class="composer">
+        <textarea id="input" rows="1" maxlength="500" placeholder="Ask about a policy or an order" aria-label="Message"></textarea>
+        <button class="send" id="send" aria-label="Send message"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 19V5M5 12l7-7 7 7"/></svg></button>
+      </div>
+      <p class="hint">Enter to send, Shift+Enter for a new line</p>
+    </form>
+  </main>
+</div>
+
+<script>
+const log = document.getElementById("log");
+const input = document.getElementById("input");
+const sendBtn = document.getElementById("send");
+const select = document.getElementById("customer");
+let customers = [], sessionId = null, busy = false;
+
+const BOT_ICON = '<svg viewBox="0 0 32 32" fill="none" stroke="#fff" stroke-width="2.4" stroke-linejoin="round"><path d="M16 6 6 25h20L16 6Z"/></svg>';
+const esc = s => s.replace(/[&<>]/g, c => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;" }[c]));
+
+function render(text) {
+  const inline = t => esc(t).replace(/\*\*(.+?)\*\*/g, "<strong>$1</strong>");
+  let html = "", list = false;
+  for (const line of text.split("\n")) {
+    const m = line.match(/^\s*(?:[-*•]|\d+\.)\s+(.*)/);
+    if (m) { if (!list) { html += "<ul>"; list = true; } html += "<li>" + inline(m[1]) + "</li>"; }
+    else { if (list) { html += "</ul>"; list = false; } if (line.trim()) html += "<p>" + inline(line) + "</p>"; }
+  }
+  return html + (list ? "</ul>" : "");
+}
+
+const TICK = '<svg class="tick" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m3 8.5 3.2 3L13 4.5"/></svg>';
+const ICONS = {
+  return: '<path d="M9 14 4 9l5-5"/><path d="M4 9h10a6 6 0 0 1 0 12h-3"/>',
+  money: '<circle cx="12" cy="12" r="9"/><path d="M14.5 9.5c-.4-.9-1.3-1.4-2.5-1.4-1.5 0-2.5.7-2.5 1.8 0 2.4 5 1.2 5 3.7 0 1.1-1 1.8-2.5 1.8-1.3 0-2.2-.6-2.6-1.5M12 6.5v1.6M12 15.9v1.6"/>',
+  box: '<path d="m21 8-9-5-9 5v8l9 5 9-5V8Z"/><path d="m3 8 9 5 9-5M12 13v8"/>',
+  lock: '<rect x="5" y="11" width="14" height="9" rx="2"/><path d="M8 11V8a4 4 0 0 1 8 0v3"/>'
+};
+const icon = name => '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">' + ICONS[name] + '</svg>';
+const STAGE = { placed: 1, processing: 1, shipped: 2, delivered: 3, return_requested: 3, returned: 3, cancelled: 3 };
+function greeting() {
+  const h = new Date().getHours();
+  return h < 5 ? "Hello" : h < 12 ? "Good morning" : h < 18 ? "Good afternoon" : "Good evening";
+}
+
+const reduced = () => matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+function addStep(trail, text) {
+  const prev = trail.querySelector(".step.now");
+  if (prev) {
+    prev.classList.remove("now");
+    prev.querySelector(".mark").innerHTML = TICK;
+    prev.querySelector(".t")?.remove();
+  }
+  const el = document.createElement("div");
+  el.className = "step now";
+  el.innerHTML = '<span class="mark"><i class="spin"></i></span><span class="txt"></span><span class="t"></span>';
+  el.querySelector(".txt").textContent = text;
+  trail.appendChild(el);
+  scrollDown();
+}
+
+// Fade the words of a finished answer in one after another (the answer has already passed the output guard).
+function revealWords(el) {
+  if (reduced()) return 0;
+  const walker = document.createTreeWalker(el, NodeFilter.SHOW_TEXT);
+  const nodes = [];
+  while (walker.nextNode()) nodes.push(walker.currentNode);
+  const count = nodes.reduce((n, t) => n + (t.nodeValue.match(/\S+/g) || []).length, 0);
+  const gap = Math.min(35, 1400 / Math.max(count, 1));
+  let i = 0;
+  nodes.forEach(node => {
+    const frag = document.createDocumentFragment();
+    node.nodeValue.split(/(\s+)/).forEach(part => {
+      if (!part) return;
+      if (/^\s+$/.test(part)) { frag.appendChild(document.createTextNode(part)); return; }
+      const w = document.createElement("span");
+      w.className = "w"; w.textContent = part; w.style.animationDelay = (i++ * gap) + "ms";
+      frag.appendChild(w);
+    });
+    node.replaceWith(frag);
+  });
+  const total = i * gap + 350;
+  const timer = setInterval(scrollDown, 80);
+  setTimeout(() => { clearInterval(timer); scrollDown(); }, total);
+  return total;
+}
+
+function addMeta(bubble, seconds, answer, delay) {
+  const meta = document.createElement("div");
+  meta.className = "meta";
+  if (delay) meta.style.animation = "fade .4s ease-out " + delay + "ms both";
+  const time = document.createElement("span");
+  time.textContent = seconds + "s";
+  const copy = document.createElement("button");
+  copy.type = "button"; copy.textContent = "Copy";
+  copy.onclick = async () => {
+    try { await navigator.clipboard.writeText(answer); copy.textContent = "Copied"; }
+    catch (e) { copy.textContent = "Press Ctrl+C"; }
+    setTimeout(() => (copy.textContent = "Copy"), 1500);
+  };
+  meta.append(time, copy);
+  bubble.appendChild(meta);
+}
+
+// Light up the order cards that a message mentions.
+function pingOrders(text) {
+  const ids = text.match(/\b\d{5}\b/g) || [];
+  document.querySelectorAll(".order[data-id]").forEach(card => {
+    if (!ids.includes(card.dataset.id)) return;
+    card.classList.remove("ping");
+    void card.offsetWidth;
+    card.classList.add("ping");
+    card.scrollIntoView({ block: "nearest", inline: "nearest", behavior: reduced() ? "auto" : "smooth" });
+    setTimeout(() => card.classList.remove("ping"), 2600);
+  });
+}
+
+function scrollDown() { log.scrollTop = log.scrollHeight; }
+
+function addUser(text) {
+  const row = document.createElement("div");
+  row.className = "row user";
+  const b = document.createElement("div");
+  b.className = "bubble"; b.textContent = text;
+  row.appendChild(b); log.appendChild(row); scrollDown();
+}
+
+function addBot(html) {
+  const row = document.createElement("div");
+  row.className = "row bot";
+  row.innerHTML = '<div class="avatar">' + BOT_ICON + '</div><div class="bubble"></div>';
+  row.querySelector(".bubble").innerHTML = html;
+  log.appendChild(row); scrollDown();
+  return row;
+}
+
+function addError(text) {
+  const el = document.createElement("div");
+  el.className = "err"; el.textContent = text;
+  log.appendChild(el); scrollDown();
+}
+
+function setBusy(value) {
+  busy = value;
+  input.disabled = sendBtn.disabled = value;
+  if (!value) input.focus();
+}
+
+function statusClass(s) {
+  if (["delivered", "shipped"].includes(s)) return "";
+  if (["cancelled", "returned"].includes(s)) return "bad";
+  return "warn";
+}
+
+function current() { return customers.find(c => c.customer_id === select.value); }
+
+function fillInput(text) { input.value = text; autosize(); input.focus(); }
+
+function showOrders() {
+  const list = document.getElementById("orders");
+  list.innerHTML = "";
+  (current()?.orders || []).forEach((o, index) => {
+    const li = document.createElement("li");
+    li.style.setProperty("--i", index);
+    const b = document.createElement("button");
+    b.type = "button"; b.className = "order"; b.dataset.id = o.order_id;
+    b.title = "Ask about this order";
+    b.innerHTML = '<span class="top"><span>#' + o.order_id + '</span><span class="st"><i class="dot ' + statusClass(o.status) + '"></i>' + esc(o.status.replace("_", " ")) + '</span></span><span class="items"></span><span class="bar ' + statusClass(o.status) + '"><i></i><i></i><i></i></span>';
+    b.querySelector(".items").textContent = o.items;
+    b.querySelectorAll(".bar i").forEach((seg, k) => seg.classList.toggle("on", k < (STAGE[o.status] || 1)));
+    b.onclick = () => fillInput("Where is my order " + o.order_id + "?");
+    li.appendChild(b); list.appendChild(li);
+  });
+}
+
+function welcome() {
+  sessionId = null;
+  log.innerHTML = "";
+  const c = current();
+  const w = document.createElement("div");
+  w.className = "welcome"; w.id = "welcome";
+  const first = c && (c.orders.find(o => o.status === "delivered") || c.orders[0]);
+  const asks = ["How many days do I have to return an item?", "How long do refunds take?"];
+  if (first) asks.push("Can I return the items from order " + first.order_id + "?");
+  w.innerHTML = '<div class="lantern"><svg viewBox="0 0 32 32" fill="none" stroke="#fff" stroke-width="2" stroke-linejoin="round"><path d="M16 7 7 24h18L16 7Z"/><path class="flame" d="M12.5 24 16 17l3.5 7" fill="#e8a93a" stroke="#e8a93a" stroke-width="1.5"/></svg></div><h1></h1><p>Ask about returns, shipping, refunds or one of your orders.</p><div class="asks"></div>';
+  w.querySelector("h1").textContent = greeting() + (c ? ", " + c.name.split(" ")[0] : "") + ". How can I help?";
+  const box = w.querySelector(".asks");
+  const kinds = ["return", "money", "box"];
+  asks.forEach((t, k) => box.appendChild(ask(t, false, kinds[k])));
+  box.appendChild(ask("Show me the details of order 10001", true, "lock"));
+  log.appendChild(w);
+}
+
+function ask(text, edge, kind) {
+  const b = document.createElement("button");
+  b.type = "button"; b.className = "ask" + (edge ? " edge" : "");
+  b.innerHTML = icon(kind) + "<span></span>";
+  b.querySelector("span").textContent = text;
+  if (edge) b.title = "This order belongs to another customer, so the assistant should refuse";
+  b.onclick = () => send(text);
+  return b;
+}
+
+async function send(text) {
+  text = text.trim();
+  if (busy || !text) return;
+  document.getElementById("welcome")?.remove();
+  addUser(text);
+  pingOrders(text);
+  input.value = ""; autosize();
+  setBusy(true);
+  const typing = addBot('<div class="trail"></div>');
+  const trail = typing.querySelector(".trail");
+  const started = performance.now();
+  addStep(trail, "Sending your message");
+  const clock = setInterval(() => {
+    const t = trail.querySelector(".step.now .t");
+    if (t) t.textContent = ((performance.now() - started) / 1000).toFixed(1) + "s";
+  }, 100);
+  let finished = false;
+  try {
+    const res = await fetch("/api/chat/stream", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ customer_id: select.value, session_id: sessionId, message: text })
+    });
+    if (!res.ok) {
+      const data = await res.json().catch(() => ({}));
+      typing.remove(); finished = true;
+      addError(data.detail || "Something went wrong. Please try again.");
+    } else {
+      const reader = res.body.getReader(), decoder = new TextDecoder();
+      let buffer = "";
+      while (true) {
+        const { value, done } = await reader.read();
+        if (done) break;
+        buffer += decoder.decode(value, { stream: true });
+        let cut;
+        while ((cut = buffer.indexOf("\n\n")) >= 0) {
+          const chunk = buffer.slice(0, cut); buffer = buffer.slice(cut + 2);
+          if (!chunk.startsWith("data: ")) continue;
+          const event = JSON.parse(chunk.slice(6));
+          if (event.type === "status") addStep(trail, event.text);
+          else if (event.type === "final") {
+            typing.remove(); finished = true;
+            sessionId = event.session_id;
+            const row = addBot(render(event.answer));
+            const bubble = row.querySelector(".bubble");
+            const delay = revealWords(bubble);
+            addMeta(bubble, ((performance.now() - started) / 1000).toFixed(1), event.answer, delay);
+            pingOrders(event.answer);
+          } else if (event.type === "error") {
+            typing.remove(); finished = true;
+            if (event.status === 500) sessionId = null;
+            addError(event.detail || "Something went wrong. Please try again.");
+          }
+        }
+      }
+    }
+  } catch (e) {
+    /* handled below */
+  }
+  clearInterval(clock);
+  if (!finished) {
+    typing.remove();
+    addError("The connection was interrupted. Please try again.");
+  }
+  setBusy(false);
+}
+
+function autosize() {
+  input.style.height = "auto";
+  input.style.height = Math.min(input.scrollHeight, 120) + "px";
+}
+
+input.addEventListener("input", autosize);
+input.addEventListener("keydown", e => {
+  if (e.key === "Enter" && !e.shiftKey) { e.preventDefault(); send(input.value); }
+});
+document.getElementById("form").addEventListener("submit", e => { e.preventDefault(); send(input.value); });
+document.getElementById("newchat").onclick = welcome;
+select.addEventListener("change", () => { showOrders(); welcome(); });
+
+fetch("/api/demo-customers").then(r => r.json()).then(data => {
+  customers = data;
+  data.forEach(c => {
+    const o = document.createElement("option");
+    o.value = c.customer_id;
+    o.textContent = c.name + " (" + c.customer_id + ")";
+    select.appendChild(o);
+  });
+  showOrders(); welcome();
+}).catch(() => addError("Could not load demo customers."));
+</script>
+</body>
+</html>
