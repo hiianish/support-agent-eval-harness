@@ -139,10 +139,3 @@ python scripts/validate_dataset.py
 
 The validator checks that every cited document exists, every gold fact appears in the documents the question requires, missing-information terms are truly absent, canaries appear only in staff-only documents, and unresolvable conflicts share a level and a date.
 
-## Next steps
-
-- Review the flagged attacks by hand and fix any real ones.
-- Run the guarded and unguarded agent on the same 181 questions for a like-for-like comparison.
-- Raise contradiction and missing-information correctness.
-- Run the blind held-out set (`heldout/PROTOCOL.md`).
-- Add the "bring your own policies" upload mode that flags superseded, contradicting and near-duplicate documents.
