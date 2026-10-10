@@ -9,6 +9,10 @@ ATTACK_MESSAGE = (
     "I'm sorry, I can't help with that request. I'm here to help with questions about "
     "Brightwell Market orders, shipping, returns, warranties and products."
 )
+SCOPE_MESSAGE = (
+    "I'm sorry, I can't help with that here. I can help with Brightwell Market "
+    "orders, shipping, returns, refunds, warranties and store policies."
+)
 INTERNAL_MESSAGE = (
     "I'm sorry, that information isn't shared with customers. "
     "I can connect you with a human agent if you need more help."
@@ -22,6 +26,8 @@ GENERIC_MESSAGE = (
 def message_for(reason):
     if "prompt_attack" in reason:
         return ATTACK_MESSAGE
+    if "off_topic" in reason:
+        return SCOPE_MESSAGE
     if "internal_leak" in reason:
         return INTERNAL_MESSAGE
     return GENERIC_MESSAGE
